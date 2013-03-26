@@ -131,6 +131,8 @@ static char putenvBufG[256];
 #define ALL_DETAILS_PREFIX_LEN (sizeof(ALL_DETAILS_PREFIX) - 1)
 #define NO_STATUS_PREFIX "noStatus="
 #define NO_STATUS_PREFIX_LEN (sizeof(NO_STATUS_PREFIX) - 1)
+#define METHOD_PREFIX "method="
+#define METHOD_PREFIX_LEN (sizeof(METHOD_PREFIX) - 1)
 #define RESOURCE_PREFIX "resource="
 #define RESOURCE_PREFIX_LEN (sizeof(RESOURCE_PREFIX) - 1)
 #define TARGET_BUCKET_PREFIX "targetBucket="
@@ -2077,6 +2079,8 @@ static void generate_query_string(int argc, char **argv, int optindex)
 
     const char *resource = 0;
 
+    const char *method = "GET";
+
     while (optindex < argc) {
         char *param = argv[optindex++];
         if (!strncmp(param, EXPIRES_PREFIX, EXPIRES_PREFIX_LEN)) {
@@ -2089,6 +2093,9 @@ static void generate_query_string(int argc, char **argv, int optindex)
         }
         else if (!strncmp(param, RESOURCE_PREFIX, RESOURCE_PREFIX_LEN)) {
             resource = &(param[RESOURCE_PREFIX_LEN]);
+        }
+        else if (!strncmp(param, METHOD_PREFIX, METHOD_PREFIX_LEN)) {
+            method = &(param[METHOD_PREFIX_LEN]);
         }
         else {
             fprintf(stderr, "\nERROR: Unknown param: %s\n", param);
@@ -2111,7 +2118,7 @@ static void generate_query_string(int argc, char **argv, int optindex)
     char buffer[S3_MAX_AUTHENTICATED_QUERY_STRING_SIZE];
 
     S3Status status = S3_generate_authenticated_query_string
-        (buffer, &bucketContext, key, expires, resource);
+        (buffer, &bucketContext, method, key, expires, resource);
     
     if (status != S3StatusOK) {
         printf("Failed to generate authenticated query string: %s\n",

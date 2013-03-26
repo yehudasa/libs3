@@ -1428,7 +1428,7 @@ int64_t S3_get_request_context_timeout(S3RequestContext *requestContext);
  *         S3StatusOK on success
  **/
 S3Status S3_generate_authenticated_query_string
-    (char *buffer, const S3BucketContext *bucketContext,
+    (char *buffer, const S3BucketContext *bucketContext, const char *method,
      const char *key, int64_t expires, const char *resource);
 
 

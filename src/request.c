@@ -1312,7 +1312,7 @@ S3Status request_curl_code_to_status(CURLcode code)
 
 
 S3Status S3_generate_authenticated_query_string
-    (char *buffer, const S3BucketContext *bucketContext,
+    (char *buffer, const S3BucketContext *bucketContext, const char *method,
      const char *key, int64_t expires, const char *resource)
 {
 #define MAX_EXPIRES (((int64_t) 1 << 31) - 1)
@@ -1357,7 +1357,7 @@ S3Status S3_generate_authenticated_query_string
     len += snprintf(&(signbuf[len]), sizeof(signbuf) - len,     \
                     format, __VA_ARGS__)
 
-    signbuf_append("%s\n", "GET"); // HTTP-Verb
+    signbuf_append("%s\n", method); // HTTP-Verb
     signbuf_append("%s\n", ""); // Content-MD5
     signbuf_append("%s\n", ""); // Content-Type
     signbuf_append("%llu\n", (unsigned long long) expires);
